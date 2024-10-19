@@ -5,13 +5,34 @@ const initialItems = [
   { id: 2, description: "Socks", quantity: 12, packed: false },
   { id: 3, description: "charger", quantity: 16, packed: true },
 ];
-function Item({ item }) {
+
+
+function App() {
+  const [items, setItems] = useState(initialItems);
+
+  function handelItems(item){
+    setItems((prevItems) => [...prevItems, item]);
+  } 
+  function handelDelete(id){
+    setItems((prevItems)=> prevItems.filter(item => item.id !== id))
+  }
+  return (
+    <div className="app">
+      <Logo />
+      <Form handelAddItem={handelItems} />
+      <PackingList items={items} hanDeleteItem={handelDelete}/>
+      <Stats />
+    </div>
+  );
+}
+
+function Item({ item, handelDeleteItem }) {
   return (
     <li>
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
-      <button style={{ color: "red", fontSize: "32px" }}>&times;</button>
+      <button onClick={()=> handelDeleteItem(item.id)} style={{ color: "red", fontSize: "32px" }}>&times;</button>
     </li>
   );
 }
@@ -62,12 +83,12 @@ function Form({handelAddItem}) {
   );
 }
 
-function PackingList({items}) {
+function PackingList({items, hanDeleteItem}) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} key={item.id} />
+          <Item item={item} key={item.id} handelDeleteItem={hanDeleteItem} />
         ))}
       </ul>
     </div>
@@ -81,21 +102,5 @@ function Stats() {
   );
 }
 
-function App() {
-  const [items, setItems] = useState([]);
-
-  function handelItems(item){
-    setItems((prevItems) => [...prevItems, item]);
-  } 
-
-  return (
-    <div className="app">
-      <Logo />
-      <Form handelAddItem={handelItems} />
-      <PackingList items={items} />
-      <Stats />
-    </div>
-  );
-}
 
 export default App;
