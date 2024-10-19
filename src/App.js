@@ -16,19 +16,23 @@ function App() {
   function handelDelete(id){
     setItems((prevItems)=> prevItems.filter(item => item.id !== id))
   }
+  function handelToogle(id){
+    setItems(prevItems => prevItems.map(item => item.id === id ? {...item, packed : !item.packed } : item))
+  }
   return (
     <div className="app">
       <Logo />
       <Form handelAddItem={handelItems} />
-      <PackingList items={items} hanDeleteItem={handelDelete}/>
+      <PackingList  items={items} hanDeleteItem={handelDelete} handelToogle={handelToogle}/>
       <Stats />
     </div>
   );
 }
 
-function Item({ item, handelDeleteItem }) {
+function Item({ item, handelDeleteItem, handelToogle }) {
   return (
     <li>
+      <input onChange={()=> handelToogle(item.id)} type="checkbox"  />
       <span style={item.packed ? { textDecoration: "line-through" } : {}}>
         {item.quantity} {item.description}
       </span>
@@ -83,12 +87,12 @@ function Form({handelAddItem}) {
   );
 }
 
-function PackingList({items, hanDeleteItem}) {
+function PackingList({items, hanDeleteItem, handelToogle}) {
   return (
     <div className="list">
       <ul>
         {items.map((item) => (
-          <Item item={item} key={item.id} handelDeleteItem={hanDeleteItem} />
+          <Item item={item} key={item.id} handelDeleteItem={hanDeleteItem} handelToogle={handelToogle} />
         ))}
       </ul>
     </div>
