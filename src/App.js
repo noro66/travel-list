@@ -22,6 +22,11 @@ function App() {
       )
     );
   }
+  function handelReset() {
+    const confirmed = window.confirm('are you sure you want to delete all the items ?');
+    if(confirmed) setItems([]);
+  }
+
   return (
     <div className="app">
       <Logo />
@@ -30,6 +35,7 @@ function App() {
         items={items}
         hanDeleteItem={handelDelete}
         handelToogle={handelToogle}
+        handelReset={handelReset}
       />
       <Stats items={items} />
     </div>
@@ -101,7 +107,7 @@ function Form({ handelAddItem }) {
   );
 }
 
-function PackingList({ items, hanDeleteItem, handelToogle }) {
+function PackingList({ items, hanDeleteItem, handelToogle, handelReset}) {
   const [sortedBy, setSortBy] = useState("input");
   let sortedItems;
 
@@ -127,13 +133,15 @@ function PackingList({ items, hanDeleteItem, handelToogle }) {
           />
         ))}
       </ul>
-      <div className="actions">
+
+      {items.length > 0 && <div className="actions">
         <select value={sortedBy} onChange={(e) => setSortBy(e.target.value)}>
           <option value="input">Sort by input order</option>
           <option value="description">Sort by description</option>
           <option value="status">Sort by packed status</option>
         </select>
-      </div>
+        <button onClick={handelReset}>Clear List</button>
+      </div>}
     </div>
   );
 }
